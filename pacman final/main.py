@@ -93,8 +93,8 @@ def bfs(grid, start, end):
 def draw_path(path, screen, x_grid, y_grid):
     if path:
         for row, col in path:
-            x = col * x_grid + x_grid // 2  # 注意這裡換成 x_grid
-            y = row * y_grid + y_grid // 2  # 注意這裡換成 y_grid
+            x = col * x_grid + x_grid // 2  
+            y = row * y_grid + y_grid // 2  
             pygame.draw.circle(screen, (255, 0, 0), (x, y), 4)
 
 class Ghost:
@@ -181,7 +181,7 @@ class Ghost:
                             if (0 <= check_row < len(level) and 0 <= check_col < len(level[0]) and level[check_row][check_col] < 3):
                                 self.path = bfs(level, (row, col), (check_row, check_col))
                                 found_valid_target = True
-                                break  # 找到可通行的目標，跳出迴圈
+                                break  
 
                         if not found_valid_target:
                             self.path = bfs(level, (row, col), (target_pacman_row, target_pacman_col))
@@ -194,7 +194,7 @@ class Ghost:
                     if(self.cooldown_timer < chase_switch_timer):
                         pass
                     elif(math.pow(col - pacman_col,2) + math.pow(row - pacman_row,2)) <= 64:
-                        self.path = bfs(level, (row, col), (850 // x_grid, 80 // y_grid)) # 注意這裡換成 x_grid 和 y_grid
+                        self.path = bfs(level, (row, col), (850 // x_grid, 80 // y_grid)) 
                     else:
                         self.path = bfs(level, (row, col), (pacman_row, pacman_col))
 
@@ -222,12 +222,12 @@ class Ghost:
                     found_path = False
 
                     if 0 <= target_row < len(level) and 0 <= target_col < len(level[0]):
-                        # 目標在界內，檢查是否是牆壁
+                        # 目標在界內
                         if level[target_row][target_col] < 3:
                             self.path = bfs(level, (row, col), (target_row, target_col))
                             found_path = True
                         else:
-                            # 目標是牆壁，從圓圈尋找最近道路
+                            # 目標是牆壁
                             search_radius = 1
                             while not found_path and search_radius < max(len(level), len(level[0])):
                                 for i in range(-search_radius, search_radius + 1):
@@ -254,7 +254,7 @@ class Ghost:
                                     self.path = bfs(level, (row, col), (r, target_col))
                                     found_path = True
                                     break
-                        # 檢查水平方向 (保持不變)
+                        # check horizon
                         if not found_path:
                             if target_col < 0:
                                 for c in range(0, col + 1):
@@ -704,12 +704,12 @@ def draw_menu():
         item_rect = menu_item.get_rect(center=(WIDTH // 2, 500 + i * 100))
         menu_item_rects.append(item_rect) 
 
-        # 滑鼠
+        # mouse
         if item_rect.collidepoint(mouse_pos):
             text_color = "green"
             current_font = pygame.font.Font("chinesefont.ttf", 40)
-            selected_option = i # 同步更新選中項
-        #鍵盤
+            selected_option = i 
+        #keyboard
         elif selected_option == i:
             text_color = "yellow" 
             current_font = pygame.font.Font("chinesefont.ttf", 52) 
@@ -725,7 +725,7 @@ def draw_instructions():
     screen.fill("black")
     screen.blit(background_img, (0, 0))
     ESC_font = chinese_font.render("(按 ESC 返回選單)", True, "white")
-    exit_rect = ESC_font.get_rect(topleft=(20, 20)) # 移到左上角
+    exit_rect = ESC_font.get_rect(topleft=(20, 20)) 
     screen.blit(ESC_font, exit_rect)
     instruction_title = title_font.render("遊戲簡介", True, "white")
     title_rect = instruction_title.get_rect(center=(WIDTH // 2, 120))
@@ -945,7 +945,7 @@ def draw_game_over():
     game_over_text = title_font.render("Game Over!!", True, "red")
     game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT * 3 // 10))
 
-    if game_over_alpha < 200: # 在背景還沒完全黑之前
+    if game_over_alpha < 200: # 全黑前
         game_over_text_alpha -= 5
         if game_over_text_alpha < 0:
             game_over_text_alpha = 0
@@ -956,7 +956,7 @@ def draw_game_over():
         screen.blit(inverted_text, game_over_rect)
     else:
         screen.blit(game_over_text, game_over_rect)
-        game_over_text_alpha = 0 # 確保文字不再變透明
+        game_over_text_alpha = 0 # 不再變透明
 
     
     restart_color = "white"
@@ -1017,23 +1017,23 @@ def draw_victory():
         screen.blit(victory_text, victory_rect)
         victory_text_alpha = 0
 
-    # 顯示最終分數
+    # final score
     score_font = pygame.font.Font("chinesefont.ttf", 48)
     score_display = score_font.render(f"Final Score: {final_score}", True, "white")
-    score_rect = score_display.get_rect(center=(WIDTH // 2, HEIGHT * 3 // 10 + 50)) # 往下移一點
+    score_rect = score_display.get_rect(center=(WIDTH // 2, HEIGHT * 3 // 10 + 50)) 
     screen.blit(score_display, score_rect)
 
-    # "重新開始" 按鈕
+    # restart
     restart_color = "white"
     restart_font_normal = pygame.font.Font('BoldChinese.ttf', 48)
     restart_text_surface = restart_font_normal.render("重新開始", True, restart_color)
-    restart_rect = restart_text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50)) # 往下移
+    restart_rect = restart_text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50)) 
 
-    # "返回選單" 按鈕
+    # return
     menu_color = "white"
     menu_font_normal = pygame.font.Font('BoldChinese.ttf', 48)
     menu_text_surface = menu_font_normal.render("返回選單", True, menu_color)
-    menu_rect = menu_text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 150)) # 更往下移
+    menu_rect = menu_text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 150))
 
     mouse_pos = pygame.mouse.get_pos()
     can_click_buttons = (victory_alpha == 255)
@@ -1170,7 +1170,7 @@ while run:
     
     elif game_state == "instructions":
         exit_button_rect = draw_instructions()
-        for event in events: # 使用統一取得的事件列表
+        for event in events: 
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.KEYDOWN:
